@@ -1,12 +1,27 @@
 import { socket } from "@/utils/socket";
 
-const Inputs = () => {
+const Inputs = ({ selectedUser, setSelectedUser }) => {
 
     const HandleSubmit = (e) => {
         e.preventDefault();
         const { message } = e.target.elements;
         if (message.value.trim() !== "" && message.value.trim() !== null && message.value.trim() !== undefined && message.value.trim() !== " ") {
-            socket.emit("message", { content: message.value });
+            if (selectedUser) {
+                socket.emit("private message", { content: message.value, to: selectedUser.userID });
+                const _selectedUser = { ...selectedUser };
+
+                _selectedUser.messages.push({
+                    content: message.value,
+                    // fromSelf: true,
+                    username: localStorage.getItem("username"),
+                    from: socket.userID,
+                });
+
+                // change the reference to trigger a render
+                setSelectedUser(_selectedUser);
+            } else {
+                socket.emit("message", { content: message.value });
+            }
             e.target.reset();
         }
     }

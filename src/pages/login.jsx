@@ -12,6 +12,9 @@ const Login = () => {
     const router = useRouter();
 
     useEffect(() => {
+        if (localStorage.getItem('username')) {
+            router.push("/");
+        }
         setTimeout(() => {
             setLoading(false);
         }, 1000);

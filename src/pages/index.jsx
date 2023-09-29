@@ -11,6 +11,8 @@ import Link from 'next/link';
 import SoundBoardIcon from '@/assets/icons/soundboard.svg'
 
 const Home = () => {
+    const router = useRouter();
+    const [selectedUser, setSelectedUser] = useState();
     const { setLoading } = useContext(LoadingContext);
     const { push } = useRouter();
     const [messages, setMessages] = useState([]);
@@ -154,15 +156,53 @@ const Home = () => {
         }
     }, [soundBoardPopup])
 
+    const onPrivateMessage = ({ content, from, to, username }) => {
+        console.log(content, from, to, username);
+        // check from which user the message came from
+        const userMessagingIndex = usersConnected.findIndex(
+            (_user) => _user.userID === from
+        );
+
+        console.log(userMessagingIndex);
+
+        const userMessaging = usersConnected.find((_user) => _user.userID === from);
+
+        console.log(userMessaging);
+
+        if (!userMessaging) return;
+
+        userMessaging.messages.push({
+            content,
+            from,
+            to,
+            username: username,
+        });
+
+        //  if (userMessaging.userID !== selectedUser?.userID) {
+        //    userMessaging.hasNewMessages = true;
+        //  }
+
+        const _users = [...usersConnected];
+        _users[userMessagingIndex] = userMessaging;
+
+        setUsersConnected(_users);
+    };
+
     useEffect(() => {
+        socket.on("private message", onPrivateMessage);
         socket.on("user connected", onUserConnect);
         socket.on("user disconnected", onUserDisconnect);
 
         return () => {
+            socket.off("private message", onPrivateMessage);
             socket.off("user connected", onUserConnect);
             socket.off("user disconnected", onUserDisconnect);
         }
     }, [usersConnected]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [selectedUser]);
 
 
     return (
@@ -176,25 +216,21 @@ const Home = () => {
                 <Commands />
                 <div className='dm-list'>
                     <ul>
-                        <li>
-                            <Link href={`/`}>
-                                <img src="https://ui-avatars.com/api/?name=G" alt="avatar" draggable="false" />
-                                <p className='name'>Salon Général</p>
-                            </Link>
+                        <li className={selectedUser === null ? 'active' : ''} onClick={() => setSelectedUser(null)}>
+                            <img src="https://ui-avatars.com/api/?name=G" alt="avatar" draggable="false" />
+                            <p className='name'>Salon Général</p>
                         </li>
                         {
                             usersConnected.map((user) => (
-                                user.connected &&
-                                <li key={user.userID}>
-                                    <Link href={`/dm/${user.userID}`}>
-                                        <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
-                                        <p className='name'>{user.username}</p>
-                                        {
-                                            user.connected &&
-                                            <div className='dot'>
-                                            </div>
-                                        }
-                                    </Link>
+                                user.connected && user.userID !== socket.userID &&
+                                <li key={user.userID} className={selectedUser?.userID === user.userID ? 'active' : ''} onClick={() => setSelectedUser(user)}>
+                                    <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
+                                    <p className='name'>{user.username}</p>
+                                    {
+                                        user.connected &&
+                                        <div className='dot'>
+                                        </div>
+                                    }
                                 </li>
                             ))
                         }
@@ -206,33 +242,63 @@ const Home = () => {
                             𝐺𝑒𝑛𝑒𝑟𝑎𝑙
                         </h2>
                     </div>
-                    <div className='chat-box' ref={chatBoxRef}>
-                        <div className='message header'>
-                            <img src={`https://ui-avatars.com/api/?name=G`} alt="avatar" draggable="false" />
-                            <div className='message-content'>
-                                <h2>𝐺𝑒𝑛𝑒𝑟𝑎𝑙</h2>
-                                <p>Bienvenue sur le salon 𝐺𝑒𝑛𝑒𝑟𝑎𝑙 !</p>
-                            </div>
-                        </div>
-                        {
-                            last40Messages.map((message, key) => {
-                                return (
-                                    <div key={key} className='message'>
-                                        <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" />
-                                        <div className='message-content'>
-                                            <h2>{message.username}</h2>
-                                            <p>{message.content}</p>
-                                        </div>
+                    {
+                        selectedUser && (
+                            <div className='chat-box' ref={chatBoxRef}>
+                                <div className='message header'>
+                                    <img src={`https://ui-avatars.com/api/?name=${selectedUser.username}`} alt="avatar" draggable="false" />
+                                    <div className='message-content'>
+                                        <h2>{selectedUser.username}</h2>
+                                        <p>Vous êtes en conversation avec {selectedUser.username}</p>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
+                                </div>
+                                {
+                                    selectedUser.messages.map((message, key) => {
+                                        return (
+                                            <div key={key} className='message'>
+                                                <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" />
+                                                <div className='message-content'>
+                                                    <h2>{message.username}</h2>
+                                                    <p>{message.content}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+                    }
+                    {
+                        !selectedUser && (
+                            <div className='chat-box' ref={chatBoxRef}>
+                                <div className='message header'>
+                                    <img src={`https://ui-avatars.com/api/?name=G`} alt="avatar" draggable="false" />
+                                    <div className='message-content'>
+                                        <h2>𝐺𝑒𝑛𝑒𝑟𝑎𝑙</h2>
+                                        <p>Bienvenue sur le salon 𝐺𝑒𝑛𝑒𝑟𝑎𝑙 !</p>
+                                    </div>
+                                </div>
+                                {
+                                    last40Messages.map((message, key) => {
+                                        return (
+                                            <div key={key} className='message'>
+                                                <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" />
+                                                <div className='message-content'>
+                                                    <h2>{message.username}</h2>
+                                                    <p>{message.content}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                        )
+                    }
                     <div className='chat-input'>
                         <p className='typing'>
                             Saku is typing...
                         </p>
-                        <Inputs />
+                        <Inputs setSelectedUser={setSelectedUser} selectedUser={selectedUser} />
                         <button className='soundboard-btn' onClick={() => setSoundBoardPopup(!soundBoardPopup)}>
                             <img src={`./assets/icons/soundboard.svg`} alt="soundboard" draggable="false" />
                         </button>
@@ -274,9 +340,23 @@ const Home = () => {
                             usersConnected.filter((user) => user.connected).length
                         }
                     </p>
-                    <ul>
+                    <ul className='online-list'>
                         {usersConnected.map((user) => (
                             user.connected &&
+                            <li key={user.userID}>
+                                <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
+                                <p className='name'>{user.username}</p>
+                            </li>
+                        ))}
+                    </ul>
+                    <p className='title'>
+                        Utilisateurs hors ligne - {
+                            usersConnected.filter((user) => user.connected === false).length
+                        }
+                    </p>
+                    <ul className='offline-list'>
+                        {usersConnected.map((user) => (
+                            user.connected === false &&
                             <li key={user.userID}>
                                 <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
                                 <p className='name'>{user.username}</p>

@@ -209,6 +209,16 @@ const Home = () => {
                                             <p>/dormir</p>
                                         </button>
                                     </li>
+                                    <li>
+                                        <button onClick={() => playSoundBoard('/skype')}>
+                                            <p>/skype</p>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => playSoundBoard('/whatsapp')}>
+                                            <p>/whatsapp</p>
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         }

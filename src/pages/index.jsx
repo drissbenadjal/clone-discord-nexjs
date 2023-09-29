@@ -230,6 +230,7 @@ const Home = () => {
                     </p>
                     <ul>
                         {usersConnected.map((user) => (
+                            user.connected &&
                             <li key={user.userID}>
                                 <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
                                 <p className='name'>{user.username}</p>

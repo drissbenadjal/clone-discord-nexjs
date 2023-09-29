@@ -6,6 +6,7 @@ import Inputs from "@/components/Inputs";
 import Commands from '@/components/Commands';
 import { LoadingContext } from "@/context/LoadingContext";
 import Notification from '@/components/notification/notification';
+import Link from 'next/link';
 
 import SoundBoardIcon from '@/assets/icons/soundboard.svg'
 
@@ -49,6 +50,34 @@ const Home = () => {
         console.log(error);
         localStorage.clear();
         push("/login");
+    }
+
+    const onUserConnect = (_user) => {
+        setUsersConnected((oldUsers) => {
+            const users = [...oldUsers];
+            const userIndex = users.findIndex((user) => user.userID === _user.userID);
+
+            if (userIndex !== -1) {
+                users[userIndex].connected = true;
+            } else {
+                users.push(_user);
+            }
+
+            return users;
+        });
+    };
+
+    const onUserDisconnect = (_user) => {
+        setUsersConnected((oldUsers) => {
+            const users = [...oldUsers];
+            const userIndex = users.findIndex((user) => user.userID === _user.userID);
+
+            if (userIndex !== -1) {
+                users[userIndex].connected = false;
+            }
+
+            return users;
+        });
     }
 
     const onError = ({ code, error }) => {
@@ -108,6 +137,8 @@ const Home = () => {
             socket.off("users", getUsersConnected);
             socket.off("connect_error", onConnexionError);
             socket.off("disconnect", onConnexionError);
+            socket.off("user connected", onUserConnect);
+            socket.off("user disconnected", onUserDisconnect);
             socket.disconnect();
         };
     }, []);
@@ -135,6 +166,17 @@ const Home = () => {
         }
     }, [soundBoardPopup])
 
+    useEffect(() => {
+        socket.on("user connected", onUserConnect);
+        socket.on("user disconnected", onUserDisconnect);
+
+        return () => {
+            socket.off("user connected", onUserConnect);
+            socket.off("user disconnected", onUserDisconnect);
+        }
+    }, [usersConnected]);
+
+
     return (
         <>
             {
@@ -147,13 +189,27 @@ const Home = () => {
                 <div className='dm-list'>
                     <ul>
                         <li>
-                            <img src="https://ui-avatars.com/api/?name=G" alt="avatar" draggable="false" />
-                            <p className='name'>Salon Général</p>
+                            <Link href={`/`}>
+                                <img src="https://ui-avatars.com/api/?name=G" alt="avatar" draggable="false" />
+                                <p className='name'>Salon Général</p>
+                            </Link>
                         </li>
-                        <li>
-                            <img src="https://ui-avatars.com/api/?name=Saku" alt="avatar" draggable="false" />
-                            <p className='name'>Saku</p>
-                        </li>
+                        {
+                            usersConnected.map((user) => (
+                                user.connected &&
+                                <li key={user.userID}>
+                                    <Link href={`/dm/${user.userID}`}>
+                                        <img src={`https://ui-avatars.com/api/?name=${user.username}`} alt="avatar" draggable="false" />
+                                        <p className='name'>{user.username}</p>
+                                        {
+                                            user.connected &&
+                                            <div className='dot'>
+                                            </div>
+                                        }
+                                    </Link>
+                                </li>
+                            ))
+                        }
                     </ul>
                 </div>
                 <div className='chat-container'>

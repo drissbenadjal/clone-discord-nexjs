@@ -9,6 +9,8 @@ const Commands = () => {
         setSounds({
             souhait: new Audio("./sounds/souhait.mp3"),
             dormir: new Audio("./sounds/dormir.mp3"),
+            skype: new Audio("./sounds/skype.mp3"),
+            whatsapp: new Audio("./sounds/whatsapp.mp3"),
         })
     }, [])
 

@@ -53,31 +53,21 @@ const Home = () => {
     }
 
     const onUserConnect = (_user) => {
-        setUsersConnected((oldUsers) => {
-            const users = [...oldUsers];
-            const userIndex = users.findIndex((user) => user.userID === _user.userID);
+        const existingUser = usersConnected.find((user) => user.userID === _user.userID);
 
-            if (userIndex !== -1) {
-                users[userIndex].connected = true;
-            } else {
-                users.push(_user);
-            }
+        if (existingUser) {
+            return;
+        }
 
-            return users;
-        });
+        setUsersConnected((currentUsers) => [...currentUsers, _user]);
     };
 
-    const onUserDisconnect = (_user) => {
-        setUsersConnected((oldUsers) => {
-            const users = [...oldUsers];
-            const userIndex = users.findIndex((user) => user.userID === _user.userID);
-
-            if (userIndex !== -1) {
-                users[userIndex].connected = false;
-            }
-
-            return users;
-        });
+    const onUserDisconnect = (_userID) => {
+        const filteredArray = [...usersConnected].filter((_user) =>
+            _user.userID !== _userID ? true : false
+        );
+        console.log(filteredArray);
+        setUsersConnected(filteredArray);
     }
 
     const onError = ({ code, error }) => {
@@ -137,8 +127,6 @@ const Home = () => {
             socket.off("users", getUsersConnected);
             socket.off("connect_error", onConnexionError);
             socket.off("disconnect", onConnexionError);
-            socket.off("user connected", onUserConnect);
-            socket.off("user disconnected", onUserDisconnect);
             socket.disconnect();
         };
     }, []);

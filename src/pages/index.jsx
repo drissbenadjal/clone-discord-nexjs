@@ -226,7 +226,9 @@ const Home = () => {
                 </div>
                 <div className='user-online'>
                     <p className='title'>
-                        Utilisateurs en ligne - {usersConnected.length}
+                        Utilisateurs en ligne - {
+                            usersConnected.filter((user) => user.connected).length
+                        }
                     </p>
                     <ul>
                         {usersConnected.map((user) => (

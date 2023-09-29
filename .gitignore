@@ -34,3 +34,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+.next/
+.next/cache/.DS_Store
+.next/.DS_Store

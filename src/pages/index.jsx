@@ -97,6 +97,7 @@ const Home = () => {
         socket.on("messages", getMessagesAtInit);
         socket.on("users", getUsersConnected);
         socket.on("connect_error", onConnexionError);
+        socket.on("disconnect", onConnexionError);
 
         return () => {
             socket.disconnect();
@@ -106,6 +107,8 @@ const Home = () => {
             socket.off("messages", getMessagesAtInit);
             socket.off("users", getUsersConnected);
             socket.off("connect_error", onConnexionError);
+            socket.off("disconnect", onConnexionError);
+            socket.disconnect();
         };
     }, []);
 

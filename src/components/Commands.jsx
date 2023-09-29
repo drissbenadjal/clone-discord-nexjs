@@ -27,6 +27,14 @@ const Commands = () => {
                     sounds.dormir.play();
                     break;
 
+                case '/skype':
+                    sounds.skype.play();
+                    break;
+
+                case '/whatsapp':
+                    sounds.whatsapp.play();
+                    break;
+                    
                 default:
                     break;
             }

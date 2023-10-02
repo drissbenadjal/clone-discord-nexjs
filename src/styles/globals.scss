@@ -367,9 +367,37 @@ img.bg-discord {
     padding-bottom: 20px;
 }
 
-.chat-box .message-content {
-  width: 100%;
-}
+.chat-box .message .avatar-img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
+  
+  .chat-box .message h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+    margin: 0;
+    padding: 0 10px;
+  }
+  
+  .chat-box .message-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .chat-box .message-content img {
+    max-height: 200px;
+    max-width: 250px;
+    margin-left: 10px;
+    border-radius: 7px;
+  }
 
 .chat-box .message {
     display: flex;

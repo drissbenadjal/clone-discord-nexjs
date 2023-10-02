@@ -254,15 +254,40 @@ const Home = () => {
                                 </div>
                                 {
                                     selectedUser.messages.map((message, key) => {
-                                        return (
-                                            <div key={key} className='message'>
-                                                <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" />
-                                                <div className='message-content'>
-                                                    <h2>{message.username}</h2>
-                                                    <p>{message.content}</p>
+
+                                        if (message.content.match(/^(http|https):\/\/.*\.(jpeg|jpg|gif|png|svg|webp)$/) != null) {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <img src={message.content} alt="image" draggable="false" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )
+                                            )
+                                        } else if (message.isImage) {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <img src={message.content} alt="image" draggable="false" />
+                                                    </div>
+                                                </div>
+                                            )
+                                        } else if (message.content.trim() === "") {
+                                            return null;
+                                        } else {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <p>{message.content}</p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     })
                                 }
                             </div>
@@ -280,15 +305,39 @@ const Home = () => {
                                 </div>
                                 {
                                     last40Messages.map((message, key) => {
-                                        return (
-                                            <div key={key} className='message'>
-                                                <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" />
-                                                <div className='message-content'>
-                                                    <h2>{message.username}</h2>
-                                                    <p>{message.content}</p>
+                                        if (message.content.match(/^(http|https):\/\/.*\.(jpeg|jpg|gif|png|svg|webp)$/) != null) {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <img src={message.content} alt="image" draggable="false" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )
+                                            )
+                                        } else if (message.isImage) {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <img src={message.content} alt="image" draggable="false" />
+                                                    </div>
+                                                </div>
+                                            )
+                                        } else if (message.content.trim() === "") {
+                                            return null;
+                                        } else {
+                                            return (
+                                                <div key={key} className='message'>
+                                                    <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
+                                                    <div className='message-content'>
+                                                        <h2>{message.username}</h2>
+                                                        <p>{message.content}</p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     })
                                 }
                             </div>

@@ -295,7 +295,7 @@ const Home = () => {
                                                                     {
                                                                         beforeUrl[0]
                                                                     }
-                                                                    <Link href={url} target="_blank">
+                                                                    <Link to={url} target="_blank">
                                                                         {
                                                                             url
                                                                         }
@@ -376,7 +376,7 @@ const Home = () => {
                                                                     {
                                                                         beforeUrl[0]
                                                                     }
-                                                                    <Link href={url} target="_blank">
+                                                                    <Link to={url} target="_blank">
                                                                         {
                                                                             url
                                                                         }

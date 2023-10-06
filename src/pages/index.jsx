@@ -295,11 +295,11 @@ const Home = () => {
                                                                     {
                                                                         beforeUrl[0]
                                                                     }
-                                                                    <Link to={url} target="_blank">
+                                                                    <a href={url} target="_blank">
                                                                         {
                                                                             url
                                                                         }
-                                                                    </Link>
+                                                                    </a>
                                                                     {
                                                                         afterUrl[1]
                                                                     }
@@ -376,11 +376,11 @@ const Home = () => {
                                                                     {
                                                                         beforeUrl[0]
                                                                     }
-                                                                    <Link to={url} target="_blank">
+                                                                    <a href={url} target="_blank">
                                                                         {
                                                                             url
                                                                         }
-                                                                    </Link>
+                                                                    </a>
                                                                     {
                                                                         afterUrl[1]
                                                                     }

@@ -265,6 +265,7 @@ const Home = () => {
                                                     </div>
                                                 </div>
                                             )
+                                            //if message is a link
                                         } else if (message.isImage) {
                                             return (
                                                 <div key={key} className='message'>
@@ -278,12 +279,43 @@ const Home = () => {
                                         } else if (message.content.trim() === "") {
                                             return null;
                                         } else {
+                                            //if message contain link split the message and add a link whith the url
+                                            const url = message.content.match(/(https?:\/\/[^\s]+)/g);
+                                            const beforeUrl = message.content.split(url);
+                                            const afterUrl = message.content.split(url);
                                             return (
                                                 <div key={key} className='message'>
                                                     <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
                                                     <div className='message-content'>
                                                         <h2>{message.username}</h2>
-                                                        <p>{message.content}</p>
+                                                        {
+                                                            url &&
+                                                            <>
+                                                                <p>
+                                                                    {
+                                                                        beforeUrl[0]
+                                                                    }
+                                                                    <Link href={url} target="_blank">
+                                                                        {
+                                                                            url
+                                                                        }
+                                                                    </Link>
+                                                                    {
+                                                                        afterUrl[1]
+                                                                    }
+                                                                </p>
+                                                            </>
+                                                        }
+                                                        {
+                                                            !url &&
+                                                            <>
+                                                                <p>
+                                                                    {
+                                                                        message.content
+                                                                    }
+                                                                </p>
+                                                            </>
+                                                        }
                                                     </div>
                                                 </div>
                                             )
@@ -328,12 +360,43 @@ const Home = () => {
                                         } else if (message.content.trim() === "") {
                                             return null;
                                         } else {
+                                            //if message contain link split the message and add a link whith the url
+                                            const url = message.content.match(/(https?:\/\/[^\s]+)/g);
+                                            const beforeUrl = message.content.split(url);
+                                            const afterUrl = message.content.split(url);
                                             return (
                                                 <div key={key} className='message'>
                                                     <img src={`https://ui-avatars.com/api/?name=${message.username}`} alt="avatar" draggable="false" className='avatar-img' />
                                                     <div className='message-content'>
                                                         <h2>{message.username}</h2>
-                                                        <p>{message.content}</p>
+                                                        {
+                                                            url &&
+                                                            <>
+                                                                <p>
+                                                                    {
+                                                                        beforeUrl[0]
+                                                                    }
+                                                                    <Link href={url} target="_blank">
+                                                                        {
+                                                                            url
+                                                                        }
+                                                                    </Link>
+                                                                    {
+                                                                        afterUrl[1]
+                                                                    }
+                                                                </p>
+                                                            </>
+                                                        }
+                                                        {
+                                                            !url &&
+                                                            <>
+                                                                <p>
+                                                                    {
+                                                                        message.content
+                                                                    }
+                                                                </p>
+                                                            </>
+                                                        }
                                                     </div>
                                                 </div>
                                             )

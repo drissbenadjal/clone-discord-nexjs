@@ -407,7 +407,7 @@ img.bg-discord {
 
 .chat-box .message {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     padding: 8px 20px;
     margin-top: 10px;
@@ -627,8 +627,9 @@ img.bg-discord {
 }
 
 .user-online {
-    width: 100%;
-    max-width: 350px;
+    width: 270px;
+    max-width: 270px;
+    min-width: 270px;
     height: calc(100vh);
     background-color: #282b30;
     padding-top: 70px;
